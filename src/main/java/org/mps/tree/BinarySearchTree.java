@@ -65,7 +65,7 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
 
     @Override
     public boolean isLeaf() {
-        return this.value != null && this.right == null && this.left == null;
+        return this.value != null && this.right.value == null && this.left.value == null;
     }
 
     @Override

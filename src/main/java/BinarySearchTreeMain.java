@@ -18,6 +18,12 @@ public class BinarySearchTreeMain {
 
         System.out.println(arbol.render());
 
+
+        System.out.println("maximo?: "+arbol.maximum());
+        System.out.println("minimo?: "+arbol.minimum());
+        System.out.println("contiene 100 "+arbol.contains(100));
+        System.out.println("contiene 80 "+arbol.contains(80));
+        
         arbol.removeBranch(70);
 
         System.out.println(arbol.render());
@@ -31,7 +37,7 @@ public class BinarySearchTreeMain {
         System.out.println(arbol.render());
 
         isLeaf = arbol.isLeaf();
-        System.out.println("el arbol es hoja?: "+isLeaf); // DEBERIA DE DAR TRUE
+        System.out.println("el arbol es hoja?: "+isLeaf); // DEBERIA DE DAR TRUE (HE COMPROBADO SI LOS VALORES SON NULOS EN VEZ DE LAS SUBRAMAS YA QUE LAS RAMAS EN VEZ DE NULOS SON EMPTY)
 		
 	}
 }
