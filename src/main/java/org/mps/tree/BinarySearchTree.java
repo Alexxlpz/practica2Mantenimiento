@@ -1,6 +1,9 @@
 package org.mps.tree;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 
 public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
     private Comparator<T> comparator;
@@ -170,4 +173,109 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
     // Complex operations
     // (Estas operaciones se incluirán más adelante para ser realizadas en la segunda
     // sesión de laboratorio de esta práctica)
+
+    @Override
+    public void removeValue(T value){
+
+        if(value == null){
+            throw new BinarySearchTreeException("ERROR: intentamos borrar un valor nulo del arbol");
+        }
+
+         if(this.comparator.compare(value, this.value) < 0){
+            this.left.removeValue(value);
+
+        }else if(this.comparator.compare(value, this.value) == 0){
+
+            if(this.right != null){
+                
+                T minimo = this.right.minimum();
+                if(minimo != this.right.value) {
+                    this.removeValue(minimo);
+                    this.value = minimo;
+                }else {
+                    this.value = this.right.value;
+                    this.right = this.right.right;
+                }
+            }else if(this.left != null){
+                this.value = this.left.value;
+                this.left = this.left.left;
+                this.right = this.left.right;
+            }else {
+                this.value = null;
+            }
+
+        }else if(this.comparator.compare(value, this.value) > 0){
+            this.right.removeValue(value);
+        }
+    }
+
+    @Override
+    public List<T> inOrder(){
+        List<T> lista = new ArrayList<>();
+
+        if(this.left != null){
+            lista.addAll(this.left.inOrder());
+        }
+        
+        lista.add(this.value);
+        
+        if(this.right != null){
+            lista.addAll(this.right.inOrder());
+        }
+
+        return lista;
+    }
+
+    @Override
+    public void balance(){
+        List<T> lista = this.inOrder();
+        int size = lista.size();
+
+        int medio   = size/2;
+
+        this.removeBranch(this.value);
+
+        this.value = lista.get(medio);
+
+        List<T> listaDer = eliminarInnecesarios(lista, 0, medio);
+        List<T> listaIzq = lista;
+
+        this.left  = balance(listaIzq);
+        this.right = balance(listaDer);
+    }
+
+    private BinarySearchTree<T> balance(List<T> lista){
+        BinarySearchTree<T> tree = new BinarySearchTree<>(comparator);
+
+        if(lista.size() == 0){
+            tree = null;
+        }else {
+            int size = lista.size();
+            int medio   = size/2;
+    
+            this.value = lista.get(medio);
+    
+            List<T> listaDer = eliminarInnecesarios(lista, 0, medio);
+            List<T> listaIzq = lista;
+    
+            tree.left  = balance(listaIzq);
+            tree.right = balance(listaDer);
+        }
+        
+        return tree;
+    }
+
+    private List<T> eliminarInnecesarios(List<T> lista, int inicio, int fin){
+
+
+        for(int i = inicio;i < fin;i++){
+            lista.remove(i);
+        }
+
+        return lista;
+    }
+
+
+
+
 }
