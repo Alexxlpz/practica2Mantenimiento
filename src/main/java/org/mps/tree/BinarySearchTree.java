@@ -1,7 +1,6 @@
 package org.mps.tree;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -49,6 +48,8 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
 
         if(this.value == null){
             this.value = value;
+            this.left = null;
+            this.right = null;
         }else{
             if(this.comparator.compare(this.value, value) < 0){
                 if(this.right == null){
@@ -56,7 +57,7 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
                 }
 
                 this.right.insert(value);
-            }else if(this.comparator.compare(this.value, value) > 0){
+            }else{
                 if(this.left == null){
                     this.left = new BinarySearchTree<>(this.comparator);
                 }
@@ -68,7 +69,7 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
 
     @Override
     public boolean isLeaf() {
-        return this.value != null && this.right.value == null && this.left.value == null;
+        return this.value != null && this.right == null && this.left == null;
     }
 
     @Override
@@ -121,18 +122,31 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
             throw new BinarySearchTreeException("ERROR: intentamos borrar una rama con un valor nulo");
         }
 
-        if(this.value != null){
-            if(this.comparator.compare(this.value, value) < 0 && this.right != null){
-                this.right.removeBranch(value);
+        if(this.comparator.compare(this.value, value) < 0){
+            if(this.right == null){
+                throw new BinarySearchTreeException("ERROR: Valor no existe en el arbol");
+            }
 
-            }else if(this.comparator.compare(this.value, value) == 0){
-                this.value = null;
-                this.left = null;
+            if(this.right.value == value){
                 this.right = null;
+            }else {
+                this.right.removeBranch(value);
+            }
 
-            }else if(this.comparator.compare(this.value, value) > 0 && this.left != null){
+        }else if(this.comparator.compare(this.value, value) == 0){
+            this.value = null;
+            this.left = null;
+            this.right = null;
+
+        }else if(this.comparator.compare(this.value, value) > 0){
+            if(this.left == null){
+                throw new BinarySearchTreeException("ERROR: Valor no existe en el arbol");
+            }
+
+            if(this.left.value == value){
+                this.left = null;
+            }else {
                 this.left.removeBranch(value);
-
             }
         }
     }
@@ -140,12 +154,22 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
     @Override
     public int size() {
         int inc = 0;
+        int izq = 0;
+        int der = 0;
 
         if(this.value != null){
             inc = 1;
         }
 
-        return this.left.size() + inc + this.right.size();
+        if(this.left != null){
+            izq = this.left.size();
+        }
+
+        if(this.right != null){
+            der = this.right.size();
+        }
+
+        return izq + inc + der;
     }
 
     @Override
@@ -229,19 +253,26 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
     @Override
     public void balance(){
         List<T> lista = this.inOrder();
-        int size = lista.size();
-
-        int medio   = size/2;
+        int medio   = (lista.size()-1)/2;
 
         this.removeBranch(this.value);
 
         this.value = lista.get(medio);
+        lista.remove(medio);
 
-        List<T> listaDer = eliminarInnecesarios(lista, 0, medio);
-        List<T> listaIzq = lista;
+        List<List<T>> listas = dividirLista(lista);
+        //System.out.println(listas);
+        List<T> listaIzq = listas.get(0);
+        List<T> listaDer = listas.get(1);
+        
 
-        this.left  = balance(listaIzq);
-        this.right = balance(listaDer);
+        if(listaIzq.size() == 1 && listaDer.size() == 0 && this.comparator.compare(listaIzq.get(0), this.value) > 0){
+            this.left  = balance(listaDer);
+            this.right = balance(listaIzq);
+        }else {
+            this.left  = balance(listaIzq);
+            this.right = balance(listaDer);
+        }
     }
 
     private BinarySearchTree<T> balance(List<T> lista){
@@ -250,29 +281,49 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
         if(lista.size() == 0){
             tree = null;
         }else {
-            int size = lista.size();
-            int medio   = size/2;
+            int medio   = (lista.size()-1)/2;
     
-            this.value = lista.get(medio);
-    
-            List<T> listaDer = eliminarInnecesarios(lista, 0, medio);
-            List<T> listaIzq = lista;
-    
-            tree.left  = balance(listaIzq);
-            tree.right = balance(listaDer);
+            tree.value = lista.get(medio);
+            lista.remove(medio);
+
+            List<List<T>> listas = dividirLista(lista);
+            //System.out.println(listas);
+            List<T> listaIzq = listas.get(0);
+            List<T> listaDer = listas.get(1);
+            
+            if(listaIzq.size() == 1 && listaDer.size() == 0 && tree.comparator.compare(listaIzq.get(0), tree.value) > 0){
+                tree.left  = balance(listaDer);
+                tree.right = balance(listaIzq);
+            }else {
+                tree.left  = balance(listaIzq);
+                tree.right = balance(listaDer);
+            }
+
         }
         
         return tree;
     }
 
-    private List<T> eliminarInnecesarios(List<T> lista, int inicio, int fin){
+    // 1 2 3 4 6 7 8
+    private List<List<T>> dividirLista(List<T> lista){
 
+        int medio = (lista.size()-1)/2;
+        
+        List<List<T>> res = new ArrayList<>();
+        List<T> listaIzq = new ArrayList<>();
+        List<T> listaDer = new ArrayList<>();
 
-        for(int i = inicio;i < fin;i++){
-            lista.remove(i);
+        for(int i = 0;i < lista.size();i++){
+            if(i <= medio){
+                listaIzq.add(lista.get(i));
+            }else {
+                listaDer.add(lista.get(i));
+            }
         }
 
-        return lista;
+        res.add(listaIzq);
+        res.add(listaDer);
+        return res;
     }
 
 

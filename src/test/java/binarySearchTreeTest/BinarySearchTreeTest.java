@@ -165,6 +165,23 @@ public class BinarySearchTreeTest {
             assertFalse(arbol.isLeaf());
         }
 
+        @Test
+        @DisplayName("isLeaf sobre arbol con rama izq nada mas")
+        public void BinarySearchTreeIsLeafRamaIzquierda(){
+            arbol.insert(50);
+            arbol.insert(30);
+            assertFalse(arbol.isLeaf());
+        }
+
+        @Test
+        @DisplayName("isLeaf sobre arbol con rama der nada mas")
+        public void BinarySearchTreeIsLeafRamaDerecha(){
+            arbol.insert(50);
+            arbol.insert(70);
+            assertFalse(arbol.isLeaf());
+        }
+
+
     }
 
     @Nested
@@ -201,12 +218,35 @@ public class BinarySearchTreeTest {
         }
 
         @Test
-        @DisplayName("contains valor rama derecha")
+        @DisplayName("contains valor rama izquierda")
         public void BinarySearchTreeContainsValorRamaIzquierda(){
             arbol.insert(50);
             arbol.insert(30);
             arbol.insert(70);
             assertTrue(arbol.contains(30));
+        }
+
+        @Test
+        @DisplayName("contains valor rama derecha Nula")
+        public void BinarySearchTreeContainsValorRamaDerechaNula(){
+            arbol.insert(50);
+            arbol.insert(30);
+            assertFalse(arbol.contains(70));
+        }
+
+        @Test
+        @DisplayName("contains valor rama izquierda Nula")
+        public void BinarySearchTreeContainsValorRamaIzquierdaNula(){
+            arbol.insert(50);
+            arbol.insert(70);
+            assertFalse(arbol.contains(30));
+        }
+
+        @Test
+        @DisplayName("contains valor arbol sin ramas y no esta")
+        public void BinarySearchTreeContainsValorNoEsRaiz(){
+            arbol.insert(50);
+            assertFalse(arbol.contains(30));
         }
     }
 
@@ -322,6 +362,51 @@ public class BinarySearchTreeTest {
             arbol.removeBranch(30);
             assertEquals(renderInicial, "50(30,70)");
             assertEquals("50(,70)", arbol.render());
+        }
+
+        @Test
+        @DisplayName("removeBranch valor rama derecha larga")
+        public void BinarySearchTreeRemoveBranchValorRamaDerechaLarga(){
+            arbol.insert(50);
+            arbol.insert(30);
+            arbol.insert(70);
+            arbol.insert(60);
+            arbol.insert(80);
+            String renderInicial = arbol.render();
+            arbol.removeBranch(80);
+            assertEquals(renderInicial, "50(30,70(60,80))");
+            assertEquals("50(30,70(60,))", arbol.render());
+        }
+
+        @Test
+        @DisplayName("removeBranch valor rama izquierda larga")
+        public void BinarySearchTreeRemoveBranchValorRamaIzquierdaLarga(){
+            arbol.insert(50);
+            arbol.insert(30);
+            arbol.insert(70);
+            arbol.insert(20);
+            arbol.insert(40);
+            String renderInicial = arbol.render();
+            arbol.removeBranch(20);
+            assertEquals(renderInicial, "50(30(20,40),70)");
+            assertEquals("50(30(,40),70)", arbol.render());
+        }
+
+        @Test
+        @DisplayName("removeBranch valor rama derecha nula")
+        public void BinarySearchTreeRemoveBranchValorRamaDerechaNula(){
+            arbol.insert(50);
+            arbol.insert(30);
+            assertThrows(BinarySearchTreeException.class, () -> arbol.removeBranch(70));
+        }
+
+        @Test
+        @DisplayName("removeBranch valor rama izquierda nula")
+        public void BinarySearchTreeRemoveBranchValorRamaIzquierdaNula(){
+            arbol.insert(50);
+            arbol.insert(70);
+
+            assertThrows(BinarySearchTreeException.class, () -> arbol.removeBranch(30));
         }
     }
 

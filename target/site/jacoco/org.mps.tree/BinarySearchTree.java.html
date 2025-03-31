@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BinarySearchTree.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">junit5-mps-uma</a> &gt; <a href="index.source.html" class="el_package">org.mps.tree</a> &gt; <span class="el_source">BinarySearchTree.java</span></div><h1>BinarySearchTree.java</h1><pre class="source lang-java linenums">package org.mps.tree;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class BinarySearchTree&lt;T&gt; implements BinarySearchTreeStructure&lt;T&gt; {
+    private Comparator&lt;T&gt; comparator;
+    private T value;
+    private BinarySearchTree&lt;T&gt; left;
+    private BinarySearchTree&lt;T&gt; right;
+
+    public String render(){
+<span class="fc" id="L14">        String render = &quot;&quot;;</span>
+
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (value != null) {</span>
+<span class="fc" id="L17">            render += value.toString();</span>
+        }
+
+<span class="fc bfc" id="L20" title="All 4 branches covered.">        if (left != null || right != null) {</span>
+<span class="fc" id="L21">            render += &quot;(&quot;;</span>
+<span class="fc bfc" id="L22" title="All 2 branches covered.">            if (left != null) {</span>
+<span class="fc" id="L23">                render += left.render();</span>
+            }
+<span class="fc" id="L25">            render += &quot;,&quot;;</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            if (right != null) {</span>
+<span class="fc" id="L27">                render += right.render();</span>
+            }
+<span class="fc" id="L29">            render += &quot;)&quot;;</span>
+        }
+
+<span class="fc" id="L32">        return render;</span>
+    }
+
+<span class="fc" id="L35">    public BinarySearchTree(Comparator&lt;T&gt; comparator) {</span>
+<span class="fc" id="L36">        this.comparator = comparator;</span>
+<span class="fc" id="L37">        this.left = null;</span>
+<span class="fc" id="L38">        this.right = null;</span>
+<span class="fc" id="L39">        this.value = null;</span>
+<span class="fc" id="L40">    }</span>
+
+    @Override
+    public void insert(T value) {
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if(value == null){</span>
+<span class="fc" id="L46">            throw new BinarySearchTreeException(&quot;ERROR: intentamos insertar un valor nulo&quot;);</span>
+        }
+
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if(this.value == null){</span>
+<span class="fc" id="L50">            this.value = value;</span>
+<span class="fc" id="L51">            this.left = null;</span>
+<span class="fc" id="L52">            this.right = null;</span>
+        }else{
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            if(this.comparator.compare(this.value, value) &lt; 0){</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">                if(this.right == null){</span>
+<span class="fc" id="L56">                    this.right = new BinarySearchTree&lt;&gt;(this.comparator);</span>
+                }
+
+<span class="fc" id="L59">                this.right.insert(value);</span>
+            }else{
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                if(this.left == null){</span>
+<span class="fc" id="L62">                    this.left = new BinarySearchTree&lt;&gt;(this.comparator);</span>
+                }
+
+<span class="fc" id="L65">                this.left.insert(value);</span>
+            }
+        }
+<span class="fc" id="L68">    }</span>
+
+    @Override
+    public boolean isLeaf() {
+<span class="fc bfc" id="L72" title="All 6 branches covered.">        return this.value != null &amp;&amp; this.right == null &amp;&amp; this.left == null;</span>
+    }
+
+    @Override
+    public boolean contains(T value) {
+<span class="fc" id="L77">        boolean result = false;</span>
+
+<span class="fc bfc" id="L79" title="All 4 branches covered.">        if(this.value == null || value == null){</span>
+<span class="fc" id="L80">            result = false;</span>
+
+<span class="fc bfc" id="L82" title="All 4 branches covered.">        }else if(this.comparator.compare(this.value, value) &lt; 0 &amp;&amp; this.right != null){</span>
+<span class="fc" id="L83">            result = this.right.contains(value);</span>
+
+<span class="fc bfc" id="L85" title="All 4 branches covered.">        }else if(this.comparator.compare(this.value, value) &gt; 0 &amp;&amp; this.left != null){</span>
+<span class="fc" id="L86">            result = this.left.contains(value);</span>
+
+        }else {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">            result = this.value == value;</span>
+            
+        }
+
+<span class="fc" id="L93">        return result;</span>
+    }
+
+    @Override
+    public T minimum() {
+<span class="fc" id="L98">        T minimo = this.value;</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if(this.left != null){</span>
+<span class="fc" id="L101">            minimo = this.left.minimum();</span>
+        }
+
+<span class="fc" id="L104">        return minimo;</span>
+    }
+
+    @Override
+    public T maximum() {
+<span class="fc" id="L109">        T maximo = this.value;</span>
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if(this.right != null){</span>
+<span class="fc" id="L112">            maximo = this.right.maximum();</span>
+        }
+
+<span class="fc" id="L115">        return maximo;</span>
+    }
+
+    @Override
+    public void removeBranch(T value){
+
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if(value == null){</span>
+<span class="fc" id="L122">            throw new BinarySearchTreeException(&quot;ERROR: intentamos borrar una rama con un valor nulo&quot;);</span>
+        }
+
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if(this.comparator.compare(this.value, value) &lt; 0){</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            if(this.right == null){</span>
+<span class="fc" id="L127">                throw new BinarySearchTreeException(&quot;ERROR: Valor no existe en el arbol&quot;);</span>
+            }
+
+<span class="fc bfc" id="L130" title="All 2 branches covered.">            if(this.right.value == value){</span>
+<span class="fc" id="L131">                this.right = null;</span>
+            }else {
+<span class="fc" id="L133">                this.right.removeBranch(value);</span>
+            }
+
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        }else if(this.comparator.compare(this.value, value) == 0){</span>
+<span class="fc" id="L137">            this.value = null;</span>
+<span class="fc" id="L138">            this.left = null;</span>
+<span class="fc" id="L139">            this.right = null;</span>
+
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        }else if(this.comparator.compare(this.value, value) &gt; 0){</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">            if(this.left == null){</span>
+<span class="fc" id="L143">                throw new BinarySearchTreeException(&quot;ERROR: Valor no existe en el arbol&quot;);</span>
+            }
+
+<span class="fc bfc" id="L146" title="All 2 branches covered.">            if(this.left.value == value){</span>
+<span class="fc" id="L147">                this.left = null;</span>
+            }else {
+<span class="fc" id="L149">                this.left.removeBranch(value);</span>
+            }
+        }
+<span class="fc" id="L152">    }</span>
+
+    @Override
+    public int size() {
+<span class="fc" id="L156">        int inc = 0;</span>
+<span class="fc" id="L157">        int izq = 0;</span>
+<span class="fc" id="L158">        int der = 0;</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if(this.value != null){</span>
+<span class="fc" id="L161">            inc = 1;</span>
+        }
+
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        if(this.left != null){</span>
+<span class="fc" id="L165">            izq = this.left.size();</span>
+        }
+
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if(this.right != null){</span>
+<span class="fc" id="L169">            der = this.right.size();</span>
+        }
+
+<span class="fc" id="L172">        return izq + inc + der;</span>
+    }
+
+    @Override
+    public int depth() {
+<span class="nc" id="L177">        int result = 0;</span>
+<span class="nc" id="L178">        int left = 0;</span>
+<span class="nc" id="L179">        int right = 0;</span>
+
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if(this.left != null){</span>
+<span class="nc" id="L182">            left = this.left.depth();</span>
+        }
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if(this.right != null){</span>
+<span class="nc" id="L185">            right = this.right.depth();</span>
+        }
+
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if(left &gt; right){</span>
+<span class="nc" id="L189">            result = 1 + left;</span>
+        }else {
+<span class="nc" id="L191">            result = 1 + right;</span>
+        }
+
+<span class="nc" id="L194">        return result;</span>
+    }
+
+    // Complex operations
+    // (Estas operaciones se incluirán más adelante para ser realizadas en la segunda
+    // sesión de laboratorio de esta práctica)
+
+    @Override
+    public void removeValue(T value){
+
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if(value == null){</span>
+<span class="nc" id="L205">            throw new BinarySearchTreeException(&quot;ERROR: intentamos borrar un valor nulo del arbol&quot;);</span>
+        }
+
+<span class="nc bnc" id="L208" title="All 2 branches missed.">         if(this.comparator.compare(value, this.value) &lt; 0){</span>
+<span class="nc" id="L209">            this.left.removeValue(value);</span>
+
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        }else if(this.comparator.compare(value, this.value) == 0){</span>
+
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            if(this.right != null){</span>
+                
+<span class="nc" id="L215">                T minimo = this.right.minimum();</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">                if(minimo != this.right.value) {</span>
+<span class="nc" id="L217">                    this.removeValue(minimo);</span>
+<span class="nc" id="L218">                    this.value = minimo;</span>
+                }else {
+<span class="nc" id="L220">                    this.value = this.right.value;</span>
+<span class="nc" id="L221">                    this.right = this.right.right;</span>
+                }
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            }else if(this.left != null){</span>
+<span class="nc" id="L224">                this.value = this.left.value;</span>
+<span class="nc" id="L225">                this.left = this.left.left;</span>
+<span class="nc" id="L226">                this.right = this.left.right;</span>
+            }else {
+<span class="nc" id="L228">                this.value = null;</span>
+            }
+
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        }else if(this.comparator.compare(value, this.value) &gt; 0){</span>
+<span class="nc" id="L232">            this.right.removeValue(value);</span>
+        }
+<span class="nc" id="L234">    }</span>
+
+    @Override
+    public List&lt;T&gt; inOrder(){
+<span class="nc" id="L238">        List&lt;T&gt; lista = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if(this.left != null){</span>
+<span class="nc" id="L241">            lista.addAll(this.left.inOrder());</span>
+        }
+        
+<span class="nc" id="L244">        lista.add(this.value);</span>
+        
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        if(this.right != null){</span>
+<span class="nc" id="L247">            lista.addAll(this.right.inOrder());</span>
+        }
+
+<span class="nc" id="L250">        return lista;</span>
+    }
+
+    @Override
+    public void balance(){
+<span class="nc" id="L255">        List&lt;T&gt; lista = this.inOrder();</span>
+<span class="nc" id="L256">        int medio   = (lista.size()-1)/2;</span>
+
+<span class="nc" id="L258">        this.removeBranch(this.value);</span>
+
+<span class="nc" id="L260">        this.value = lista.get(medio);</span>
+<span class="nc" id="L261">        lista.remove(medio);</span>
+
+<span class="nc" id="L263">        List&lt;List&lt;T&gt;&gt; listas = dividirLista(lista);</span>
+        //System.out.println(listas);
+<span class="nc" id="L265">        List&lt;T&gt; listaIzq = listas.get(0);</span>
+<span class="nc" id="L266">        List&lt;T&gt; listaDer = listas.get(1);</span>
+        
+
+<span class="nc bnc" id="L269" title="All 6 branches missed.">        if(listaIzq.size() == 1 &amp;&amp; listaDer.size() == 0 &amp;&amp; this.comparator.compare(listaIzq.get(0), this.value) &gt; 0){</span>
+<span class="nc" id="L270">            this.left  = balance(listaDer);</span>
+<span class="nc" id="L271">            this.right = balance(listaIzq);</span>
+        }else {
+<span class="nc" id="L273">            this.left  = balance(listaIzq);</span>
+<span class="nc" id="L274">            this.right = balance(listaDer);</span>
+        }
+<span class="nc" id="L276">    }</span>
+
+    private BinarySearchTree&lt;T&gt; balance(List&lt;T&gt; lista){
+<span class="nc" id="L279">        BinarySearchTree&lt;T&gt; tree = new BinarySearchTree&lt;&gt;(comparator);</span>
+
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        if(lista.size() == 0){</span>
+<span class="nc" id="L282">            tree = null;</span>
+        }else {
+<span class="nc" id="L284">            int medio   = (lista.size()-1)/2;</span>
+    
+<span class="nc" id="L286">            tree.value = lista.get(medio);</span>
+<span class="nc" id="L287">            lista.remove(medio);</span>
+
+<span class="nc" id="L289">            List&lt;List&lt;T&gt;&gt; listas = dividirLista(lista);</span>
+            //System.out.println(listas);
+<span class="nc" id="L291">            List&lt;T&gt; listaIzq = listas.get(0);</span>
+<span class="nc" id="L292">            List&lt;T&gt; listaDer = listas.get(1);</span>
+            
+<span class="nc bnc" id="L294" title="All 6 branches missed.">            if(listaIzq.size() == 1 &amp;&amp; listaDer.size() == 0 &amp;&amp; tree.comparator.compare(listaIzq.get(0), tree.value) &gt; 0){</span>
+<span class="nc" id="L295">                tree.left  = balance(listaDer);</span>
+<span class="nc" id="L296">                tree.right = balance(listaIzq);</span>
+            }else {
+<span class="nc" id="L298">                tree.left  = balance(listaIzq);</span>
+<span class="nc" id="L299">                tree.right = balance(listaDer);</span>
+            }
+
+        }
+        
+<span class="nc" id="L304">        return tree;</span>
+    }
+
+    // 1 2 3 4 6 7 8
+    private List&lt;List&lt;T&gt;&gt; dividirLista(List&lt;T&gt; lista){
+
+<span class="nc" id="L310">        int medio = (lista.size()-1)/2;</span>
+        
+<span class="nc" id="L312">        List&lt;List&lt;T&gt;&gt; res = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L313">        List&lt;T&gt; listaIzq = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L314">        List&lt;T&gt; listaDer = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L316" title="All 2 branches missed.">        for(int i = 0;i &lt; lista.size();i++){</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">            if(i &lt;= medio){</span>
+<span class="nc" id="L318">                listaIzq.add(lista.get(i));</span>
+            }else {
+<span class="nc" id="L320">                listaDer.add(lista.get(i));</span>
+            }
+        }
+
+<span class="nc" id="L324">        res.add(listaIzq);</span>
+<span class="nc" id="L325">        res.add(listaDer);</span>
+<span class="nc" id="L326">        return res;</span>
+    }
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

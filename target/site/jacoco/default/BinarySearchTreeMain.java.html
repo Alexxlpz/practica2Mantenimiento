@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BinarySearchTreeMain.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">junit5-mps-uma</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">BinarySearchTreeMain.java</span></div><h1>BinarySearchTreeMain.java</h1><pre class="source lang-java linenums">import java.util.Comparator;
+import java.util.List;
+
+import org.mps.tree.BinarySearchTree;
+
+<span class="nc" id="L6">public class BinarySearchTreeMain {</span>
+    
+    public static void main(String[] args) {
+<span class="nc" id="L9">        BinarySearchTree&lt;Integer&gt; arbol = new BinarySearchTree&lt;Integer&gt;(Comparator.naturalOrder());</span>
+<span class="nc" id="L10">        arbol.insert(50);</span>
+<span class="nc" id="L11">        arbol.insert(30);</span>
+
+<span class="nc" id="L13">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L15">        arbol.insert(60);</span>
+<span class="nc" id="L16">        arbol.insert(70);</span>
+<span class="nc" id="L17">        arbol.insert(80);</span>
+<span class="nc" id="L18">        arbol.insert(50);</span>
+
+<span class="nc" id="L20">        System.out.println(arbol.render());</span>
+
+
+<span class="nc" id="L23">        System.out.println(&quot;maximo?: &quot;+arbol.maximum());</span>
+<span class="nc" id="L24">        System.out.println(&quot;minimo?: &quot;+arbol.minimum());</span>
+<span class="nc" id="L25">        System.out.println(&quot;contiene 100 &quot;+arbol.contains(100));</span>
+<span class="nc" id="L26">        System.out.println(&quot;contiene 80 &quot;+arbol.contains(80));</span>
+        
+<span class="nc" id="L28">        arbol.removeBranch(70);</span>
+
+<span class="nc" id="L30">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L32">        boolean isLeaf = arbol.isLeaf();</span>
+<span class="nc" id="L33">        System.out.println(&quot;el arbol es hoja?: &quot;+isLeaf);</span>
+
+<span class="nc" id="L35">        arbol.removeBranch(30);</span>
+<span class="nc" id="L36">        arbol.removeBranch(60);</span>
+
+<span class="nc" id="L38">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L40">        isLeaf = arbol.isLeaf();</span>
+<span class="nc" id="L41">        System.out.println(&quot;el arbol es hoja?: &quot;+isLeaf); // DEBERIA DE DAR TRUE (HE COMPROBADO SI LOS VALORES SON NULOS EN VEZ DE LAS SUBRAMAS YA QUE LAS RAMAS EN VEZ DE NULOS SON EMPTY)</span>
+
+<span class="nc" id="L43">        System.out.println(&quot;-------------------OPERACIONES COMPLEJAS-------------------&quot;);</span>
+
+<span class="nc" id="L45">        arbol = new BinarySearchTree&lt;Integer&gt;(Comparator.naturalOrder());</span>
+        BinarySearchTree&lt;Integer&gt; arbol2;
+
+<span class="nc" id="L48">        arbol.insert(50);</span>
+<span class="nc" id="L49">        arbol.insert(30);</span>
+
+<span class="nc" id="L51">        System.out.println(arbol.render());</span>
+        
+<span class="nc" id="L53">        arbol.insert(20);</span>
+<span class="nc" id="L54">        arbol.insert(70);</span>
+<span class="nc" id="L55">        arbol.insert(60);</span>
+<span class="nc" id="L56">        arbol.insert(80);</span>
+<span class="nc" id="L57">        arbol.insert(40);</span>
+
+<span class="nc" id="L59">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L61">        List&lt;Integer&gt; lista = arbol.inOrder();</span>
+        
+<span class="nc" id="L63">        System.out.println(&quot;lista ordenada&quot;+lista.toString());</span>
+
+<span class="nc" id="L65">        arbol2 = arbol;</span>
+
+<span class="nc" id="L67">        arbol2.removeValue(30);</span>
+
+<span class="nc" id="L69">        System.out.println(&quot;eliminamos el 30&quot;);</span>
+<span class="nc" id="L70">        System.out.println(arbol2.render());</span>
+
+<span class="nc" id="L72">        arbol = new BinarySearchTree&lt;Integer&gt;(Comparator.naturalOrder());</span>
+
+<span class="nc" id="L74">        arbol.insert(50);</span>
+<span class="nc" id="L75">        arbol.insert(30);</span>
+<span class="nc" id="L76">        arbol.insert(20);</span>
+<span class="nc" id="L77">        arbol.insert(70);</span>
+<span class="nc" id="L78">        arbol.insert(60);</span>
+<span class="nc" id="L79">        arbol.insert(80);</span>
+<span class="nc" id="L80">        arbol.insert(40);</span>
+<span class="nc" id="L81">        arbol.insert(42);</span>
+<span class="nc" id="L82">        arbol.insert(35);</span>
+
+<span class="nc" id="L84">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L86">        arbol.removeValue(30);</span>
+<span class="nc" id="L87">        System.out.println(&quot;eliminamos el 30&quot;);</span>
+<span class="nc" id="L88">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L90">        arbol = new BinarySearchTree&lt;Integer&gt;(Comparator.naturalOrder());</span>
+
+<span class="nc" id="L92">        arbol.insert(50);</span>
+<span class="nc" id="L93">        arbol.insert(30);</span>
+<span class="nc" id="L94">        arbol.insert(70);</span>
+<span class="nc" id="L95">        arbol.insert(20);</span>
+<span class="nc" id="L96">        arbol.insert(40);</span>
+<span class="nc" id="L97">        arbol.insert(31);</span>
+<span class="nc" id="L98">        arbol.insert(42);</span>
+<span class="nc" id="L99">        arbol.insert(60);</span>
+<span class="nc" id="L100">        arbol.insert(80);</span>
+
+<span class="nc" id="L102">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L104">        System.out.println(&quot;hacemos el balance&quot;);</span>
+<span class="nc" id="L105">        arbol.balance();</span>
+<span class="nc" id="L106">        System.out.println(arbol.render());</span>
+<span class="nc" id="L107">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

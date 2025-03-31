@@ -87,10 +87,17 @@ public class BinarySearchTreeMain {
         System.out.println("eliminamos el 30");
         System.out.println(arbol.render());
 
-        arbol.insert(100);
-        arbol.insert(110);
-        arbol.insert(120);
-        arbol.insert(130);
+        arbol = new BinarySearchTree<Integer>(Comparator.naturalOrder());
+
+        arbol.insert(50);
+        arbol.insert(30);
+        arbol.insert(70);
+        arbol.insert(20);
+        arbol.insert(40);
+        arbol.insert(31);
+        arbol.insert(42);
+        arbol.insert(60);
+        arbol.insert(80);
 
         System.out.println(arbol.render());
 
