@@ -1,3 +1,4 @@
+BinarySearchTreeMain.class
 org\mps\tree\BinarySearchTree.class
 org\mps\tree\BinarySearchTreeException.class
 org\mps\tree\BinarySearchTreeStructure.class
