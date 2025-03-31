@@ -138,7 +138,7 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
             this.left = null;
             this.right = null;
 
-        }else if(this.comparator.compare(this.value, value) > 0){
+        }else{
             if(this.left == null){
                 throw new BinarySearchTreeException("ERROR: Valor no existe en el arbol");
             }
