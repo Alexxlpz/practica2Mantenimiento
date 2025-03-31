@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: binarySearchTreeTest.BinarySearchTreeTest$RenderTests
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in binarySearchTreeTest.BinarySearchTreeTest$RenderTests
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in binarySearchTreeTest.BinarySearchTreeTest$RenderTests

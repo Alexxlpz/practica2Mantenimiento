@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: binarySearchTreeTest.BinarySearchTreeTest$SizeTests
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.159 s -- in binarySearchTreeTest.BinarySearchTreeTest$SizeTests
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in binarySearchTreeTest.BinarySearchTreeTest$SizeTests

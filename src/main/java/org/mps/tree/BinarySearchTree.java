@@ -178,17 +178,19 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
         int left = 0;
         int right = 0;
 
-        if(this.left != null){
-            left = this.left.depth();
-        }
-        if(this.right != null){
-            right = this.right.depth();
-        }
-
-        if(left > right){
-            result = 1 + left;
-        }else {
-            result = 1 + right;
+        if (this.value != null){
+            if(this.left != null){
+                left = this.left.depth();
+            }
+            if(this.right != null){
+                right = this.right.depth();
+            }
+            
+            if(left > right){
+                result = 1 + left;
+            }else {
+                result = 1 + right;
+            }
         }
 
         return result;
@@ -205,13 +207,19 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
             throw new BinarySearchTreeException("ERROR: intentamos borrar un valor nulo del arbol");
         }
 
-         if(this.comparator.compare(value, this.value) < 0){
+        if (this.value == null){
+            throw new BinarySearchTreeException("ERROR: intentamos borrar un valor de un arbol vacio");
+        }
+
+        if(this.comparator.compare(value, this.value) < 0){
+            if (this.left == null){
+                throw new BinarySearchTreeException("ERROR: intentamos borrar un valor que no esta en el arbol");
+            }
             this.left.removeValue(value);
 
         }else if(this.comparator.compare(value, this.value) == 0){
 
             if(this.right != null){
-                
                 T minimo = this.right.minimum();
                 if(minimo != this.right.value) {
                     this.removeValue(minimo);
@@ -222,13 +230,16 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
                 }
             }else if(this.left != null){
                 this.value = this.left.value;
-                this.left = this.left.left;
                 this.right = this.left.right;
+                this.left = this.left.left;
             }else {
                 this.value = null;
             }
 
-        }else if(this.comparator.compare(value, this.value) > 0){
+        }else{
+            if (this.right == null){
+                throw new BinarySearchTreeException("ERROR: intentamos borrar un valor que no esta en el arbol");
+            }
             this.right.removeValue(value);
         }
     }
@@ -240,8 +251,10 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
         if(this.left != null){
             lista.addAll(this.left.inOrder());
         }
-        
-        lista.add(this.value);
+
+        if(this.value != null){
+            lista.add(this.value);
+        }
         
         if(this.right != null){
             lista.addAll(this.right.inOrder());
@@ -252,24 +265,19 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
 
     @Override
     public void balance(){
-        List<T> lista = this.inOrder();
-        int medio   = (lista.size()-1)/2;
+        if (this.size() > 0){
+            List<T> lista = this.inOrder();
 
-        this.removeBranch(this.value);
-
-        this.value = lista.get(medio);
-        lista.remove(medio);
-
-        List<List<T>> listas = dividirLista(lista);
-        //System.out.println(listas);
-        List<T> listaIzq = listas.get(0);
-        List<T> listaDer = listas.get(1);
-        
-
-        if(listaIzq.size() == 1 && listaDer.size() == 0 && this.comparator.compare(listaIzq.get(0), this.value) > 0){
-            this.left  = balance(listaDer);
-            this.right = balance(listaIzq);
-        }else {
+            int medio   = (lista.size()-1)/2;
+            
+            this.removeBranch(this.value);
+            
+            this.value = lista.get(medio);
+            lista.remove(medio);
+            
+            List<List<T>> listas = dividirLista(lista, this.value);
+            List<T> listaIzq = listas.get(0);
+            List<T> listaDer = listas.get(1);
             this.left  = balance(listaIzq);
             this.right = balance(listaDer);
         }
@@ -286,41 +294,33 @@ public class BinarySearchTree<T> implements BinarySearchTreeStructure<T> {
             tree.value = lista.get(medio);
             lista.remove(medio);
 
-            List<List<T>> listas = dividirLista(lista);
-            //System.out.println(listas);
+            List<List<T>> listas = dividirLista(lista, tree.value);
             List<T> listaIzq = listas.get(0);
             List<T> listaDer = listas.get(1);
-            
-            if(listaIzq.size() == 1 && listaDer.size() == 0 && tree.comparator.compare(listaIzq.get(0), tree.value) > 0){
-                tree.left  = balance(listaDer);
-                tree.right = balance(listaIzq);
-            }else {
-                tree.left  = balance(listaIzq);
-                tree.right = balance(listaDer);
-            }
-
+            tree.left  = balance(listaIzq);
+            tree.right = balance(listaDer);
         }
-        
         return tree;
     }
 
-    // 1 2 3 4 6 7 8
-    private List<List<T>> dividirLista(List<T> lista){
-
-        int medio = (lista.size()-1)/2;
+    private List<List<T>> dividirLista(List<T> lista, T central){
         
         List<List<T>> res = new ArrayList<>();
         List<T> listaIzq = new ArrayList<>();
         List<T> listaDer = new ArrayList<>();
+        
+        if (lista.size() > 0){
 
-        for(int i = 0;i < lista.size();i++){
-            if(i <= medio){
-                listaIzq.add(lista.get(i));
-            }else {
-                listaDer.add(lista.get(i));
+            for(int i = 0; i < lista.size(); i++){
+                T temp = lista.get(i);
+                if(this.comparator.compare(temp, central) <= 0){
+                    listaIzq.add(temp);
+                }else {
+                    listaDer.add(temp);
+                }
             }
+            
         }
-
         res.add(listaIzq);
         res.add(listaDer);
         return res;

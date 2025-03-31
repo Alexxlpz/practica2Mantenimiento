@@ -104,6 +104,19 @@ import org.mps.tree.BinarySearchTree;
 <span class="nc" id="L104">        System.out.println(&quot;hacemos el balance&quot;);</span>
 <span class="nc" id="L105">        arbol.balance();</span>
 <span class="nc" id="L106">        System.out.println(arbol.render());</span>
-<span class="nc" id="L107">	}</span>
+
+<span class="nc" id="L108">        arbol = new BinarySearchTree&lt;Integer&gt;(Comparator.naturalOrder());</span>
+
+<span class="nc" id="L110">        arbol.insert(50);</span>
+<span class="nc" id="L111">        arbol.insert(30);</span>
+<span class="nc" id="L112">        arbol.insert(20);</span>
+<span class="nc" id="L113">        arbol.insert(40);</span>
+
+<span class="nc" id="L115">        System.out.println(arbol.render());</span>
+
+<span class="nc" id="L117">        System.out.println(&quot;eliminamos el 50&quot;);</span>
+<span class="nc" id="L118">        arbol.removeValue(50);</span>
+<span class="nc" id="L119">        System.out.println(arbol.render());</span>
+<span class="nc" id="L120">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -104,5 +104,18 @@ public class BinarySearchTreeMain {
         System.out.println("hacemos el balance");
         arbol.balance();
         System.out.println(arbol.render());
+
+        arbol = new BinarySearchTree<Integer>(Comparator.naturalOrder());
+
+        arbol.insert(50);
+        arbol.insert(30);
+        arbol.insert(20);
+        arbol.insert(40);
+
+        System.out.println(arbol.render());
+
+        System.out.println("eliminamos el 50");
+        arbol.removeValue(50);
+        System.out.println(arbol.render());
 	}
 }
